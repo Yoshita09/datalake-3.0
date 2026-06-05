@@ -1,50 +1,221 @@
-# Welcome to your Expo app 👋
+# DataLake 3.0
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Overview
 
-## Get started
+DataLake 3.0 is an Offline-First AI-powered attendance management application built using React Native and Expo. The application enables employees or field workers to mark attendance through a multi-stage AI verification process consisting of face recognition, blink detection, and head movement verification.
 
-1. Install dependencies
+The system is designed to function even in low-connectivity environments by storing attendance records locally using SQLite and synchronizing them automatically when internet connectivity becomes available.
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Start the app
+## Features
 
-   ```bash
-   npx expo start
-   ```
+### AI-Based Attendance Verification
 
-In the output, you'll find options to open the app in a
+* Face Recognition
+* Blink Detection (Liveness Check)
+* Head Movement Verification
+* Multi-Step Authentication Flow
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Offline-First Architecture
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+* Local SQLite Database
+* Offline Attendance Recording
+* Automatic Sync Queue
+* Network Aware Synchronization
 
-## Get a fresh project
+### Attendance Management
 
-When you're ready, run:
+* Check-In / Check-Out
+* Weekly Attendance Summary
+* Attendance History
+* Project-Based Attendance Tracking
 
-```bash
-npm run reset-project
+### User Features
+
+* OTP Authentication
+* Profile Management
+* Location Capture
+* Sync Status Monitoring
+
+---
+
+## Tech Stack
+
+| Layer                   | Technology         |
+| ----------------------- | ------------------ |
+| Mobile Framework        | React Native       |
+| Framework Runtime       | Expo SDK 54        |
+| Language                | TypeScript         |
+| Routing                 | Expo Router        |
+| State Management        | Zustand            |
+| Database                | Expo SQLite        |
+| Storage                 | AsyncStorage       |
+| Networking              | Axios              |
+| Connectivity Monitoring | NetInfo            |
+| Camera                  | Expo Camera        |
+| Face Detection          | Expo Face Detector |
+
+---
+
+## Project Structure
+
+```text
+app/
+├── (auth)
+│   ├── index.tsx
+│   └── verify-otp.tsx
+│
+├── attendance.tsx
+├── attendance-camera.tsx
+├── profile.tsx
+│
+├── (tabs)
+│   ├── index.tsx
+│   ├── projects.tsx
+│   └── sync.tsx
+│
+components/
+├── blinkEyes.tsx
+├── headMovement.tsx
+├── faceRecognition.tsx
+├── attendanceCard.tsx
+├── syncStatus.tsx
+└── weeklySummary.tsx
+│
+services/
+├── mlApi.ts
+├── awsSync.ts
+└── config.ts
+│
+store/
+├── attendanceStore.ts
+└── projectStore.ts
+│
+lib/
+└── db.ts
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## Local Database Schema
 
-To learn more about developing your project with Expo, look at the following resources:
+The application uses SQLite for offline storage.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### attendance_records
 
-## Join the community
+Stores daily attendance data.
 
-Join our community of developers creating universal apps.
+### projects
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Stores assigned project information.
+
+### sync_queue
+
+Tracks pending synchronization requests.
+
+### user_session
+
+Stores local user session data.
+
+---
+
+## Attendance Flow
+
+```text
+User Opens App
+        ↓
+Attendance Screen
+        ↓
+Camera Opens
+        ↓
+Blink Verification
+        ↓
+Head Movement Verification
+        ↓
+Face Recognition
+        ↓
+Attendance Marked
+        ↓
+Stored in SQLite
+        ↓
+Network Available?
+      /      \
+    Yes       No
+     ↓         ↓
+ Sync AWS   Store Offline
+```
+
+---
+
+## Installation
+
+### Prerequisites
+
+* Node.js 20+
+* npm 10+
+* Expo CLI
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Start Development Server
+
+```bash
+npx expo start
+```
+
+### Android
+
+```bash
+npm run android
+```
+
+### iOS
+
+```bash
+npm run ios
+```
+
+---
+
+## Environment Configuration
+
+Create a `.env` file:
+
+```env
+BASE_URL=http://YOUR_FASTAPI_SERVER:8000
+```
+
+---
+
+## Sync Mechanism
+
+Attendance records are stored locally first.
+
+When connectivity becomes available:
+
+1. Pending records are fetched from SQLite
+2. Records are sent to AWS backend
+3. Records are marked as synced
+4. Sync status is updated locally
+
+---
+
+## Future Improvements
+
+* Background Sync Service
+* Push Notifications
+* AWS Cognito Authentication
+* Real-Time Dashboard
+* Admin Panel
+
+---
+
+## License
+
+MIT License
+
