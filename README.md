@@ -1,60 +1,104 @@
-# DataLake 3.0
+# DataLake 3.0 Mobile Application
 
 ## Overview
 
-DataLake 3.0 is an Offline-First AI-powered attendance management application built using React Native and Expo. The application enables employees or field workers to mark attendance through a multi-stage AI verification process consisting of face recognition, blink detection, and head movement verification.
+DataLake 3.0 is an Offline-First AI-powered attendance management application built using React Native and Expo.
 
-The system is designed to function even in low-connectivity environments by storing attendance records locally using SQLite and synchronizing them automatically when internet connectivity becomes available.
+Unlike traditional attendance systems that depend on continuous internet connectivity, DataLake 3.0 allows users to securely mark attendance even in offline environments. Attendance data is stored locally using SQLite and automatically synchronized with AWS cloud infrastructure once connectivity becomes available.
+
+The application integrates multiple AI verification stages including head movement verification, blink detection, and face recognition to ensure secure attendance marking and prevent spoofing attempts.
 
 ---
 
-## Features
+## Key Features
 
-### AI-Based Attendance Verification
+### Offline-First Attendance
 
-* Face Recognition
-* Blink Detection (Liveness Check)
+* Attendance works without internet
+* Local SQLite storage
+* Sync queue management
+* Automatic cloud synchronization
+
+### AI-Based Verification
+
 * Head Movement Verification
-* Multi-Step Authentication Flow
+* Blink Detection
+* Face Recognition
+* Multi-step Liveness Validation
 
-### Offline-First Architecture
+### Smart Synchronization
 
-* Local SQLite Database
-* Offline Attendance Recording
-* Automatic Sync Queue
-* Network Aware Synchronization
-
-### Attendance Management
-
-* Check-In / Check-Out
-* Weekly Attendance Summary
-* Attendance History
-* Project-Based Attendance Tracking
+* Network Awareness
+* Retry Mechanism
+* Background Sync Queue
+* Conflict Prevention
 
 ### User Features
 
-* OTP Authentication
+* Attendance History
+* Weekly Summary
+* Project Tracking
 * Profile Management
 * Location Capture
-* Sync Status Monitoring
 
 ---
 
-## Tech Stack
+## Technology Stack
 
 | Layer                   | Technology         |
 | ----------------------- | ------------------ |
 | Mobile Framework        | React Native       |
-| Framework Runtime       | Expo SDK 54        |
+| Runtime                 | Expo SDK 54        |
 | Language                | TypeScript         |
 | Routing                 | Expo Router        |
 | State Management        | Zustand            |
-| Database                | Expo SQLite        |
-| Storage                 | AsyncStorage       |
+| Local Database          | Expo SQLite        |
+| Local Storage           | AsyncStorage       |
 | Networking              | Axios              |
 | Connectivity Monitoring | NetInfo            |
 | Camera                  | Expo Camera        |
 | Face Detection          | Expo Face Detector |
+| Cloud Integration       | AWS API Gateway    |
+| Cloud Backend           | AWS Lambda         |
+| Cloud Database          | DynamoDB           |
+
+---
+
+## System Workflow
+
+```text
+User Opens App
+        │
+        ▼
+Attendance Screen
+        │
+        ▼
+Camera Verification
+        │
+        ▼
+Head Movement Verification
+        │
+        ▼
+Blink Detection
+        │
+        ▼
+Face Recognition
+        │
+        ▼
+Attendance Marked
+        │
+        ▼
+Store in SQLite
+        │
+        ▼
+Network Available?
+    ┌───┴───┐
+    ▼       ▼
+  Yes       No
+    │        │
+    ▼        ▼
+AWS Sync  Keep Local
+```
 
 ---
 
@@ -63,87 +107,26 @@ The system is designed to function even in low-connectivity environments by stor
 ```text
 app/
 ├── (auth)
-│   ├── index.tsx
-│   └── verify-otp.tsx
-│
+├── (tabs)
 ├── attendance.tsx
 ├── attendance-camera.tsx
-├── profile.tsx
-│
-├── (tabs)
-│   ├── index.tsx
-│   ├── projects.tsx
-│   └── sync.tsx
-│
+└── profile.tsx
+
 components/
 ├── blinkEyes.tsx
 ├── headMovement.tsx
 ├── faceRecognition.tsx
-├── attendanceCard.tsx
 ├── syncStatus.tsx
-└── weeklySummary.tsx
-│
+└── attendanceCard.tsx
+
 services/
 ├── mlApi.ts
 ├── awsSync.ts
 └── config.ts
-│
+
 store/
 ├── attendanceStore.ts
 └── projectStore.ts
-│
-lib/
-└── db.ts
-```
-
----
-
-## Local Database Schema
-
-The application uses SQLite for offline storage.
-
-### attendance_records
-
-Stores daily attendance data.
-
-### projects
-
-Stores assigned project information.
-
-### sync_queue
-
-Tracks pending synchronization requests.
-
-### user_session
-
-Stores local user session data.
-
----
-
-## Attendance Flow
-
-```text
-User Opens App
-        ↓
-Attendance Screen
-        ↓
-Camera Opens
-        ↓
-Blink Verification
-        ↓
-Head Movement Verification
-        ↓
-Face Recognition
-        ↓
-Attendance Marked
-        ↓
-Stored in SQLite
-        ↓
-Network Available?
-      /      \
-    Yes       No
-     ↓         ↓
- Sync AWS   Store Offline
 ```
 
 ---
@@ -152,17 +135,17 @@ Network Available?
 
 ### Prerequisites
 
-* Node.js 20+
-* npm 10+
+* Node.js 20.x
+* npm 10.x
 * Expo CLI
 
-### Install Dependencies
+### Install
 
 ```bash
 npm install
 ```
 
-### Start Development Server
+### Start
 
 ```bash
 npx expo start
@@ -182,40 +165,28 @@ npm run ios
 
 ---
 
-## Environment Configuration
-
-Create a `.env` file:
-
-```env
-BASE_URL=http://YOUR_FASTAPI_SERVER:8000
-```
-
----
-
-## Sync Mechanism
+## Cloud Synchronization
 
 Attendance records are stored locally first.
 
 When connectivity becomes available:
 
 1. Pending records are fetched from SQLite
-2. Records are sent to AWS backend
-3. Records are marked as synced
-4. Sync status is updated locally
+2. Records are sent to AWS API Gateway
+3. Lambda validates requests
+4. Data is stored in DynamoDB
+5. Local records are marked as synced
 
 ---
 
-## Future Improvements
+## Why Offline-First?
 
-* Background Sync Service
-* Push Notifications
-* AWS Cognito Authentication
-* Real-Time Dashboard
-* Admin Panel
+Field employees often work in low-connectivity areas.
 
----
+DataLake 3.0 guarantees:
 
-## License
-
-MIT License
-
+* No attendance loss
+* Reliable data collection
+* Automatic synchronization
+* Improved user experience
+* Reduced dependency on internet connectivity
