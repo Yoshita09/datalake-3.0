@@ -1,4 +1,12 @@
 # DataLake 3.0 Mobile Application
+<p align="left">
+  <a href="https://drive.google.com/file/d/1aYJAAE1fx-hoFzDOY3aqnBmSN3KOCayo/view?usp=sharing">
+    <img src="https://img.shields.io/badge/Watch-Demo%20Video-blue?style=for-the-badge" alt="Demo Video"/>
+  </a>
+</p>
+<p align="left">
+  <img src="docs/demo.gif" width="800"/>
+</p>
 
 ## Overview
 
