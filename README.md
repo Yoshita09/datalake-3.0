@@ -3,6 +3,9 @@
   <a href="https://drive.google.com/file/d/1aYJAAE1fx-hoFzDOY3aqnBmSN3KOCayo/view?usp=sharing">
     <img src="https://img.shields.io/badge/Watch-Demo%20Video-blue?style=for-the-badge" alt="Demo Video"/>
   </a>
+  <a href="./docs/DataLake%203.0%20Guide.pdf">
+    <img src="https://img.shields.io/badge/Docs-Integration%20Guide-green?style=for-the-badge" alt="Integration Guide"/>
+  </a>
 </p>
 <p align="left">
   <img src="docs/demo.gif" width="800"/>
